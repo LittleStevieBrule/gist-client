@@ -9,7 +9,7 @@ module OctokitWrapper
   # Configures the project
 
   def self.config(defaults = {})
-    @config ||= CustomConfig.new(defaults)
+    @config ||= ProjectConfig.new(defaults)
   end
 
   def self.configure
@@ -22,7 +22,7 @@ module OctokitWrapper
   end
 
   # custom config
-  class CustomConfig < Config
+  class ProjectConfig < Config
     # this could be ignorant but as of now NilTokenError is what we want
     # IMPORTANT: Keep an Eye on this
     def error_mapping
