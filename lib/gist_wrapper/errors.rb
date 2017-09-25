@@ -1,4 +1,4 @@
-module OctokitWrapper
+module GistWrapper
   # Used for when user has not authenticated and performs an action that
   # requires authentication.
   class AuthenticationError < StandardError

@@ -4,7 +4,8 @@ require_relative 'gist_wrapper/user'
 require 'pry'
 require 'octokit'
 
-module OctokitWrapper
+# main entry point
+module GistWrapper
 
   # Configures the project
 
@@ -18,7 +19,7 @@ module OctokitWrapper
   end
 
   def self.user(options = { token: config.token })
-    OctokitWrapper::User.new options
+    GistWrapper::User.new options
   end
 
   # custom config
@@ -26,7 +27,7 @@ module OctokitWrapper
     # this could be ignorant but as of now NilTokenError is what we want
     # IMPORTANT: Keep an Eye on this
     def error_mapping
-      { :token= => OctokitWrapper::NilTokenError }
+      { :token= => GistWrapper::NilTokenError }
     end
   end
 

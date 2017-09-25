@@ -10,7 +10,7 @@ context 'cs496 tests' do
 
   # Confirm that the user `wolfordj` has at least one public Gist
   it 'should return a users Gists' do
-    my_user = OctokitWrapper.user
+    my_user = GistWrapper.user
     my_gists = my_user.gists
   end
 
@@ -23,7 +23,7 @@ context 'cs496 tests' do
   # Confirm that the contents of the Gist you created match the contents you
   # send
   it 'should create a Gist' do
-    my_user = OctokitWrapper.user
+    my_user = GistWrapper.user
     content = {
       description: 'the description for this gist',
       public: true,

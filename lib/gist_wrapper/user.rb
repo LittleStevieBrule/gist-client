@@ -1,7 +1,7 @@
 require_relative 'errors'
 require_relative 'config_object'
 
-module OctokitWrapper
+module GistWrapper
 
   # user class TODO: Doucmentation
   class User
@@ -73,8 +73,8 @@ module OctokitWrapper
   class UserConfig < Config
     def error_mapping
       {
-        username: OctokitWrapper::NoUsernameDefined,
-        token: OctokitWrapper::AuthenticationError
+        username: GistWrapper::NoUsernameDefined,
+        token: GistWrapper::AuthenticationError
       }
     end
   end
