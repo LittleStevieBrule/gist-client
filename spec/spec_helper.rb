@@ -1,4 +1,4 @@
-require_relative '../lib/octo_kit_wrapper'
+require_relative '../lib/gist_wrapper'
 
 OctokitWrapper.configure do |config|
   config.token = ENV['GISTTOKEN']

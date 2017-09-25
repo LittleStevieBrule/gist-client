@@ -1,5 +1,5 @@
-require_relative 'octo_kit_wrapper/config_object'
-require_relative 'octo_kit_wrapper/user'
+require_relative 'gist_wrapper/config_object'
+require_relative 'gist_wrapper/user'
 
 require 'pry'
 require 'octokit'
