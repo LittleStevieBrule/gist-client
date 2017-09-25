@@ -10,7 +10,8 @@ context 'cs496 tests' do
 
   # Confirm that the user `wolfordj` has at least one public Gist
   it 'should return a users Gists' do
-
+    my_user = OctokitWrapper.user
+    my_gists = my_user.gists
   end
 
   # Confirm that when you create a Gist the number of Gists associated to your

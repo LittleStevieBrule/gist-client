@@ -1,21 +1,20 @@
 require_relative 'errors'
+require_relative 'config_object'
 
 module OctokitWrapper
 
+  # user class TODO: Doucmentation
   class User
 
-    def initialize(options = {})
-      client(options) unless options[:token].nil?
+    attr_accessor :options
+
+    def initialize(options)
+      @options = UserConfig.new(options)
+      authenticate if options[:token]
     end
 
-    def client(options = {})
-      @client ||= Octokit::Client.new access_token: options[:token]
-    end
-
-    def authenticate(options = {})
-      raise OctokitWrapper::AuthenticationError if @client.nil?
-      client(options[:token]).login
-      @logged_in = true
+    def client
+      @client ||= Octokit::Client.new access_token: @options.token
     end
 
     def authenticated?
@@ -50,6 +49,34 @@ module OctokitWrapper
       client.create_gist(options)
     end
 
+    # Gets your Gist(s)
+    def gists
+      if authenticated?
+        client.gists
+      else
+        Octokit.gists(@options.username)
+      end
+    end
+
+    private
+
+    def authenticate
+      client.login
+      @logged_in = true
+    end
+
+  end
+
+  # I feel smart for once
+  # I think this will work although it could be overly complex for what I need.
+  # Update: Turns out this is really useful
+  class UserConfig < Config
+    def error_mapping
+      {
+        username: OctokitWrapper::NoUsernameDefined,
+        token: OctokitWrapper::AuthenticationError
+      }
+    end
   end
 
 end

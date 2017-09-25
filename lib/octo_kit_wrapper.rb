@@ -9,7 +9,7 @@ module OctokitWrapper
   # Configures the project
 
   def self.config(defaults = {})
-    @config ||= Config.new(defaults)
+    @config ||= CustomConfig.new(defaults)
   end
 
   def self.configure
@@ -19,6 +19,15 @@ module OctokitWrapper
 
   def self.user(options = { token: config.token })
     OctokitWrapper::User.new options
+  end
+
+  # custom config
+  class CustomConfig < Config
+    # this could be ignorant but as of now NilTokenError is what we want
+    # IMPORTANT: Keep an Eye on this
+    def error_mapping
+      { :token= => OctokitWrapper::NilTokenError }
+    end
   end
 
 end
