@@ -7,6 +7,7 @@ context 'cs496 tests' do
   it 'Should return 30 Gists' do
 
   end
+
   # Confirm that the user `wolfordj` has at least one public Gist
   it 'should return a users Gists' do
 

@@ -1,3 +1,5 @@
+require_relative 'errors'
+
 module OctokitWrapper
 
   class User
@@ -11,7 +13,7 @@ module OctokitWrapper
     end
 
     def authenticate(options = {})
-      raise_creds if @client.nil?
+      raise OctokitWrapper::AuthenticationError if @client.nil?
       client(options[:token]).login
       @logged_in = true
     end
@@ -42,14 +44,10 @@ module OctokitWrapper
     #             }
     #           }
     #           User.new.create_gist(content)
-    #           Result:
+    #           Result: Gist info
     def create_gist(options = {})
       authenticate unless authenticated?
       client.create_gist(options)
-    end
-
-    def raise_creds
-      raise 'You need to provide credentials to authenticate'
     end
 
   end
