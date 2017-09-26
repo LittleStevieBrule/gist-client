@@ -8,7 +8,7 @@ context 'cs496 tests' do
 
   it '2. The user `wolfordj` has at least one public Gist' do
     my_user = GistWrapper.user username: 'wolfordj'
-    my_gists = my_user.gists
+    expect(my_user.gist?).to eq true
   end
 
 
