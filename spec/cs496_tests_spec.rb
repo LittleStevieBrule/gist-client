@@ -28,8 +28,8 @@ context 'cs496 tests' do
     }
     response = my_user.create_gist(content)
     after = my_user.gists.length
-    expect(after).to eq(before + 1)
     my_user.delete_gist(gist: response[:id])
+    expect(after).to eq(before + 1)
   end
 
   it '4. The contents of the Gist you created match the contents you send' do
