@@ -74,6 +74,11 @@ module GistWrapper
       end
     end
 
+    # returns true if a user has at least one Gist
+    def gist?
+      !gists.empty?
+    end
+
     private
 
     def authenticate
