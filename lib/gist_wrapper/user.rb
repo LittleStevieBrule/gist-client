@@ -24,21 +24,21 @@ module GistWrapper
     #   Create a gist
     #     Parameters:
     #       options (Hash) (defaults to: {})  Gist information.
-    #       Options Hash (options):
-    #         :description (String)
-    #         :public (Boolean)  Sets gist visibility
-    #         :files (Array<Hash>)  Files that make up this gist. Keys should be
-    #          the filename, the value a Hash with a :content key with text
-    #          content of the Gist.
+    #         Options Hash (options):
+    #           :description (String)
+    #           :public (Boolean)  Sets gist visibility
+    #           :files (Array<Hash>)  Files that make up this gist. Keys should be
+    #            the filename, the value a Hash with a :content key with text
+    #            content of the Gist.
     #       Returns:
     #         (Sawyer::Resource)  Newly created gist info
     # example:
-    #           content ={
-    #           description: 'the description for this gist',
-    #               public: true,
-    #               files: {
+    #           content = {
+    #             description: 'the description for this gist',
+    #             public: true,
+    #             files: {
     #               'file1.txt' => {
-    #                   content: 'String file contents'
+    #                  content: 'String file contents'
     #               }
     #             }
     #           }
@@ -47,6 +47,22 @@ module GistWrapper
     def create_gist(options = {})
       authenticate unless authenticated?
       client.create_gist(options)
+    end
+
+    # Delete a gist #
+    #   Parameters:
+    #     options (Hash) (defaults to: {}) delete options
+    #       Options:
+    #         gist (String) Gist ID
+    #   Returns:
+    #     (Boolean) Indicating success of deletion
+    # example:
+    #  options = {gist: dee9c42e4998ce2ea439}
+    #  User.new.delete_gist(options)
+    #  Result: true
+    def delete_gist(options = {})
+      authenticate unless authenticated?
+      client.delete_gist(options[:gist])
     end
 
     # Gets your Gist(s)

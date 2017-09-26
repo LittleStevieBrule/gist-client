@@ -17,7 +17,8 @@ class Config < OpenStruct
     elsif error_mapping.keys.include? name.to_sym
       raise error_mapping[name.to_sym]
     else
-      raise NoMethodError, "undefined method `#{name}' for #{self}:#{self.class}"
+      raise NoMethodError,
+            "undefined method `#{name}' for #{self}:#{self.class}"
     end
   end
 
