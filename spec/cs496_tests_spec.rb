@@ -3,7 +3,8 @@ require_relative 'spec_helper'
 context 'cs496 tests' do
 
   it '1. Getting public Gists returns 30 Gists' do
-
+    public_gists = GistWrapper.public_gists
+    expect(public_gists.length).to eq 30
   end
 
   it '2. The user `wolfordj` has at least one public Gist' do
