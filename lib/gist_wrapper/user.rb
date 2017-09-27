@@ -116,6 +116,16 @@ module GistWrapper
       client.gist_starred? options[:id]
     end
 
+    # List the authenticated user’s starred gists
+    #
+    # @return [Array<String>] A list of gist ids
+    # @see https://developer.github.com/v3/gists/#list-gists
+    def starred_gists
+      client.starred_gists.map do |gist|
+        gist[:id]
+      end
+    end
+
     private
 
     # Octokit client
