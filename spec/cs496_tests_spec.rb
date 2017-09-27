@@ -63,12 +63,17 @@ context 'cs496 tests' do
   end
 
   it '6. You can add a star to a Gist' do
-    
-
+    begin
+      gist = @my_user.create_gist(@gist_content)
+      @my_user.star_gist id: gist[:id]
+      result = @my_user.gist_starred? id: gist[:id]
+    ensure
+      @my_user.delete_gist(id: gist[:id])
+    end
+    expect(result).to eq true
   end
 
   it '7. list of Starred gists is correct' do
-    raise 'TODO'
   end
 
   it '8. You can remove a star from a Gist' do

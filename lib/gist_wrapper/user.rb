@@ -66,6 +66,17 @@ module GistWrapper
       client.edit_gist options[:id], options
     end
 
+    # Star a gist
+    #
+    # @param options [String] Gist options
+    # @option options [String] :id id of gist
+    # @return [Boolean] Indicates if gist is starred successfully
+    # @see https://developer.github.com/v3/gists/#star-a-gist
+    def star_gist(options = {})
+      authenticate unless authenticated?
+      client.star_gist options[:id]
+    end
+
     # The users Gists
     #
     # @return [Array<Sawyer::Resource>] the users gists
@@ -93,6 +104,16 @@ module GistWrapper
     # @return [Boolean] true if the user has at least one gist
     def gist?
       !gists.empty?
+    end
+
+    # Check if a gist is starred
+    #
+    # @param options [Hash] options
+    # @option options [String] :id Gist ID
+    # @return [Boolean] Indicates if gist is starred
+    # @see https://developer.github.com/v3/gists/#check-if-a-gist-is-starred
+    def gist_starred?(options = {})
+      client.gist_starred? options[:id]
     end
 
     private
