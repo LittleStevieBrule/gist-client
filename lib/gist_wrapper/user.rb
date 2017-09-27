@@ -43,6 +43,29 @@ module GistWrapper
       client.delete_gist options[:id]
     end
 
+    # Edit a gist
+    #
+    # @param options [Hash] Gist information.
+    # @option options [String] :description
+    # @option options [Hash] :files Files that make up this gist. Keys
+    #   should be the filename, the value a Hash with a :content key with text
+    #   content of the Gist.
+    #
+    #   NOTE: All files from the previous version of the
+    #   gist are carried over by default if not included in the hash. Deletes
+    #   can be performed by including the filename with a null hash.
+    # @return
+    #   [Sawyer::Resource] Newly created gist info
+    # @see https://developer.github.com/v3/gists/#edit-a-gist
+    # @example Update a gist
+    #   @client.edit_gist({ :id => 'some_id',
+    #     :files => {"boo.md" => {"content" => "updated stuff"}}
+    #   })
+    def edit_gist(options = {})
+      authenticate unless authenticated?
+      client.edit_gist options[:id], options
+    end
+
     # The users Gists
     #
     # @return [Array<Sawyer::Resource>] the users gists
@@ -63,7 +86,7 @@ module GistWrapper
     # @see https://developer.github.com/v3/gists/#get-a-single-gist
     # @see https://developer.github.com/v3/gists/#get-a-specific-revision-of-a-gist
     def gist(options = {})
-      Ocktokit.gist options[:id]
+      Octokit.gist options[:id]
     end
 
     # User has at least one gist?

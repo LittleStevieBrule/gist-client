@@ -55,10 +55,26 @@ context 'cs496 tests' do
     expect(content).to eq expected[:files][:gist_name][:content]
   end
 
-  #  (this will require
-  # editing it and proving the edits worked)
   it '5. You are able to edit the contents of a Gist' do
-    raise 'TODO'
+    my_user = GistWrapper.user
+    expected = {
+      description: 'the description for this gist',
+      public: true,
+      files: {
+        gist_name: {
+          content: Time.now.to_s
+        }
+      }
+    }
+    begin
+      id = my_user.create_gist(expected)[:id]
+      my_user.edit_gist(id: id,
+                        files: { gist_name: { content: 'updated content' } })
+      content = my_user.gist(id: id).content
+    ensure
+      my_user.delete_gist(id: id)
+    end
+    expect(content).to eq 'updated content'
   end
 
   it '6. You can add a star to a Gist' do
@@ -69,13 +85,11 @@ context 'cs496 tests' do
     raise 'TODO'
   end
 
-  # Confirm you can remove a star from a Gist
-  it 'should remove a star from a Gist' do
+  it '8. You can remove a star from a Gist' do
     raise 'TODO'
   end
 
-  # Confirm you can delete a Gist
-  it 'should delete a Gist' do
+  it '9. You can delete a Gist' do
     my_user = GistWrapper.user
     content = {
       description: 'the description for this gist',
