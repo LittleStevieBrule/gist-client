@@ -12,7 +12,6 @@ context 'cs496 tests' do
     expect(my_user.gist?).to eq true
   end
 
-
   it '3. When you create a Gist the number of Gists associated to your
       account increases by 1' do
     my_user = GistWrapper.user
@@ -26,31 +25,55 @@ context 'cs496 tests' do
         }
       }
     }
-    response = my_user.create_gist(content)
-    after = my_user.gists.length
-    my_user.delete_gist(gist: response[:id])
+    begin
+      response = my_user.create_gist(content)
+      after = my_user.gists.length
+    ensure
+      my_user.delete_gist(gist: response[:id])
+    end
     expect(after).to eq(before + 1)
   end
 
   it '4. The contents of the Gist you created match the contents you send' do
-
+    my_user = GistWrapper.user
+    expected = {
+      description: 'the description for this gist',
+      public: true,
+      files: {
+        gist_name: {
+          content: Time.now.to_s
+        }
+      }
+    }
+    begin
+      id = my_user.create_gist(expected)[:id]
+      gists = my_user.gists
+      content = gists.each{ |e| break e.content if e.id == id }
+    ensure
+      my_user.delete_gist(gist: id)
+    end
+    expect(content).to eq expected[:files][:gist_name][:content]
   end
 
-  # Confirm that you are able to edit the contents of a Gist (this will require
+  #  (this will require
   # editing it and proving the edits worked)
   it '5. You are able to edit the contents of a Gist' do
+    raise 'TODO'
+  end
+
+  it '6. You can add a star to a Gist' do
 
   end
 
-  # Confirm that you can add a star to a Gist
-  # Confirm that your list of Starred gists is correct
-  it 'should add a star to a Gist' do
-
+  it '7. list of Starred gists is correct' do
+    raise 'TODO'
   end
+
   # Confirm you can remove a star from a Gist
   it 'should remove a star from a Gist' do
-
+    raise 'TODO'
   end
+
   # Confirm you can delete a Gist
   it 'should delete a Gist' do
     my_user = GistWrapper.user

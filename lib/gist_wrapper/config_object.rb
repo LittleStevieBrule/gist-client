@@ -22,9 +22,9 @@ class Config < OpenStruct
     end
   end
 
-  # this is here cuz rubymine/Rubocop complains and I destroy squiggle lines
   def respond_to_missing?(mid, include_private = false)
-    super
+    mname = mid.to_s.chomp("=").to_sym
+    @table.key?(mname) || super
   end
 
   # when one of the keys method names gets called if method missing is invoked

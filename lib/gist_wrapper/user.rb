@@ -46,11 +46,11 @@ module GistWrapper
     #           Result: Gist info
     def create_gist(options = {})
       authenticate unless authenticated?
-      client.create_gist(options)
+      client.create_gist options
     end
 
     # Delete a gist #
-    #   Parameters:
+    # @param options [Hash]
     #     options (Hash) (defaults to: {}) delete options
     #       Options:
     #         gist (String) Gist ID
@@ -62,7 +62,7 @@ module GistWrapper
     #  Result: true
     def delete_gist(options = {})
       authenticate unless authenticated?
-      client.delete_gist(options[:gist])
+      client.delete_gist options[:gist]
     end
 
     # Gets your Gist(s)
@@ -70,8 +70,13 @@ module GistWrapper
       if authenticated?
         client.gists
       else
-        Octokit.gists(@options.username)
+        Octokit.gists @options.username
       end
+    end
+
+    # get a gist
+    def gist(options = {})
+      Ocktokit.gist options[:id]
     end
 
     # returns true if a user has at least one Gist

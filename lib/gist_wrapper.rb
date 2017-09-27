@@ -3,6 +3,7 @@ require_relative 'gist_wrapper/user'
 
 require 'pry'
 require 'octokit'
+require_relative 'gist_wrapper/sawyer_extended/resource'
 
 # main entry point
 module GistWrapper
