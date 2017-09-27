@@ -29,7 +29,7 @@ context 'cs496 tests' do
       response = my_user.create_gist(content)
       after = my_user.gists.length
     ensure
-      my_user.delete_gist(gist: response[:id])
+      my_user.delete_gist(id: response[:id])
     end
     expect(after).to eq(before + 1)
   end
@@ -48,9 +48,9 @@ context 'cs496 tests' do
     begin
       id = my_user.create_gist(expected)[:id]
       gists = my_user.gists
-      content = gists.each{ |e| break e.content if e.id == id }
+      content = gists.each { |e| break e.content if e.id == id }
     ensure
-      my_user.delete_gist(gist: id)
+      my_user.delete_gist(id: id)
     end
     expect(content).to eq expected[:files][:gist_name][:content]
   end
@@ -86,8 +86,11 @@ context 'cs496 tests' do
         }
       }
     }
-    gist_id = my_user.create_gist(content)[:id]
-    my_user.delete_gist(gist: gist_id)
+    begin
+      gist_id = my_user.create_gist(content)[:id]
+    ensure
+      my_user.delete_gist(id: gist_id)
+    end
     my_gist_ids = my_user.gists.map { |gist| gist[:id] }
     expect(my_gist_ids.include?(gist_id)).to eq false
   end

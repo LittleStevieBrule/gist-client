@@ -13,59 +13,39 @@ module GistWrapper
       authenticate if options[:token]
     end
 
-    def client
-      @client ||= Octokit::Client.new access_token: @options.token
-    end
-
+    # @return [Boolean]
     def authenticated?
       @logged_in ||= false
     end
 
-    #   Create a gist
-    #     Parameters:
-    #       options (Hash) (defaults to: {})  Gist information.
-    #         Options Hash (options):
-    #           :description (String)
-    #           :public (Boolean)  Sets gist visibility
-    #           :files (Array<Hash>)  Files that make up this gist. Keys should be
-    #            the filename, the value a Hash with a :content key with text
-    #            content of the Gist.
-    #       Returns:
-    #         (Sawyer::Resource)  Newly created gist info
-    # example:
-    #           content = {
-    #             description: 'the description for this gist',
-    #             public: true,
-    #             files: {
-    #               'file1.txt' => {
-    #                  content: 'String file contents'
-    #               }
-    #             }
-    #           }
-    #           User.new.create_gist(content)
-    #           Result: Gist info
+    # Create a gist
+    #
+    # @param options [Hash] Gist information.
+    # @option options [String] :description
+    # @option options [Boolean] :public Sets gist visibility
+    # @option options [Array<Hash>] :files Files that make up this gist. Keys
+    #   should be the filename, the value a Hash with a :content key with text
+    #   content of the Gist.
+    # @return [Sawyer::Resource] Newly created gist info
+    # @see https://developer.github.com/v3/gists/#create-a-gist
     def create_gist(options = {})
       authenticate unless authenticated?
       client.create_gist options
     end
 
-    # Delete a gist #
-    # @param options [Hash]
-    #     options (Hash) (defaults to: {}) delete options
-    #       Options:
-    #         gist (String) Gist ID
-    #   Returns:
-    #     (Boolean) Indicating success of deletion
-    # example:
-    #  options = {gist: dee9c42e4998ce2ea439}
-    #  User.new.delete_gist(options)
-    #  Result: true
+    # Delete a gist
+    # @param options
+    # @option id [String] Gist ID
+    # @return [Boolean] Indicating success of deletion
+    # @see https://developer.github.com/v3/gists/#delete-a-gist
     def delete_gist(options = {})
       authenticate unless authenticated?
-      client.delete_gist options[:gist]
+      client.delete_gist options[:id]
     end
 
-    # Gets your Gist(s)
+    # The users Gists
+    #
+    # @return [Array<Sawyer::Resource>] the users gists
     def gists
       if authenticated?
         client.gists
@@ -74,18 +54,32 @@ module GistWrapper
       end
     end
 
-    # get a gist
+    # Get a single gist
+    #
+    # @param options [Hash] gist options
+    # @option gist [String] ID of gist to fetch
+    # @option options [String] :sha Specific gist revision SHA
+    # @return [Sawyer::Resource] Gist information
+    # @see https://developer.github.com/v3/gists/#get-a-single-gist
+    # @see https://developer.github.com/v3/gists/#get-a-specific-revision-of-a-gist
     def gist(options = {})
       Ocktokit.gist options[:id]
     end
 
-    # returns true if a user has at least one Gist
+    # User has at least one gist?
+    # @return [Boolean] true if the user has at least one gist
     def gist?
       !gists.empty?
     end
 
     private
 
+    # Octokit client
+    def client
+      @client ||= Octokit::Client.new access_token: @options.token
+    end
+
+    # authenticates the user
     def authenticate
       client.login
       @logged_in = true
@@ -93,7 +87,6 @@ module GistWrapper
 
   end
 
-  # I feel smart for once
   # I think this will work although it could be overly complex for what I need.
   # Update: Turns out this is really useful
   class UserConfig < Config
