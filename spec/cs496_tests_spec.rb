@@ -87,7 +87,7 @@ context 'cs496 tests' do
   end
 
   it '8. You can remove a star from a Gist' do
-    
+    raise 'TODO'
   end
 
   it '9. You can delete a Gist' do
