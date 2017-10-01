@@ -1,8 +1,8 @@
 require_relative 'gist_wrapper/config_object'
 require_relative 'gist_wrapper/user'
-
 require 'pry'
 require 'octokit'
+require 'psych'
 require_relative 'gist_wrapper/sawyer_extended/resource'
 
 # main entry point
@@ -10,7 +10,7 @@ module GistWrapper
 
   # Configures the project
 
-  def self.config(defaults = {})
+  def self.config(defaults = {token: Psych.load_file(GistWrapper::YAML_PATH)[:token]})
     @config ||= ProjectConfig.new(defaults)
   end
 
@@ -29,10 +29,11 @@ module GistWrapper
 
   def self.test_token
     begin
-      new_user = user.authenticate
+      new_user = user
+      new_user.authenticate
       sleep 1
       new_user.authenticated?
-    rescue Octokit::Unauthorized
+    rescue
       false
     end
   end

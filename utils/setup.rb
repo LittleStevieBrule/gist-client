@@ -20,6 +20,7 @@ class Setup
   ENV_NAME = 'GIST_TOKEN'.freeze
 
   def self.run
+
     begin
       sleep 1
       instance = Setup.new
@@ -76,8 +77,8 @@ class Setup
 
   def select_prompt
     puts printer.black.on_bright_magenta('     To run tests you need to provide an auth token.       ')
-    puts printer.black.on_bright_magenta(' It needs to be set as the environment variable GIST_TOKEN ')
-    puts printer.black.on_bright_magenta('     You can use `export GIST_TOKEN=<40 char token>`       ')
+    puts printer.black.on_bright_magenta(' It needs to be set as the environment variable GIST_TOKEN ') #TODO
+    puts printer.black.on_bright_magenta('     You can use `export GIST_TOKEN=<40 char token>`       ') #TODO
     puts printer.black.on_bright_magenta('               Or I can do it for you                      ')
     question = printer.cyan('What would you like to do?')
     prompt.select(question, options.values)
