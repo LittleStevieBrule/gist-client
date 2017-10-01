@@ -5,7 +5,7 @@ require 'tty-prompt'
 require 'pastel'
 require 'timeout'
 require 'logger'
-require 'YAML'
+require 'yaml'
 
 require_relative '../lib/gist_wrapper/constants'
 require_relative '../lib/gist_wrapper'
