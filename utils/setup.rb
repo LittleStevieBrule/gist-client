@@ -79,7 +79,7 @@ class Setup
   def select_prompt
     puts printer.black.on_bright_magenta('     To run tests you need to provide an auth token.       ')
     puts printer.black.on_bright_magenta('       It needs to be set in the token.yaml file           ')
-    puts printer.black.on_bright_magenta('             You can do this yourself                    ')
+    puts printer.black.on_bright_magenta('               You can do this yourself                    ')
     puts printer.black.on_bright_magenta('                         See:                              ')
     puts printer.black.on_bright_magenta(' https://github.com/octokit/octokit.rb#oauth-access-tokens ')
     puts printer.black.on_bright_magenta('               Or I can do it for you                      ')
@@ -134,6 +134,8 @@ class Setup
       spinner.start
       sleep 1
       client(username, password).user.login
+      @username = username
+      @password = password
       spinner.stop
       true
     rescue Octokit::Unauthorized
@@ -143,7 +145,7 @@ class Setup
   end
 
   def client(username = '', password = '')
-    @client ||= Octokit::Client.new(
+    Octokit::Client.new(
       login: username,
       password: password
     )
@@ -153,7 +155,7 @@ class Setup
   def generate_token
     spinner = TTY::Spinner.new('[:spinner] Generating token...', format: :dots, clear: true)
     spinner.start
-    token = client.create_authorization(
+    token = client(@username, @password).create_authorization(
       scopes: ['gist'], note: "Gist Token made at #{Time.now}"
     )
     spinner.stop
@@ -162,7 +164,7 @@ class Setup
 
   def set_gist_token(token)
     File.open(GistWrapper::YAML_PATH, 'w') {|f| f.write({'token': token}.to_yaml) }
-    puts 'Your token written to token.yaml'
+    puts 'Your token has been written to token.yaml'
   end
 
   def printer
