@@ -49,9 +49,3 @@ Once you have a valid token in the token.yaml file. You can run the tests:
 ```
 rspec
 ```
-
-### TODO:
-TODO:
-     1. ctrl c
-     2. detecting if there is a  valid token set
-     3. checking credentials and re-prompting if they are wrong
