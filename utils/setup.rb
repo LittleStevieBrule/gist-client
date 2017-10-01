@@ -11,6 +11,7 @@ require_relative '../lib/gist_wrapper/constants'
 require_relative '../lib/gist_wrapper'
 
 trap('INT') do
+  puts ''
   puts 'You pressed ctrl-c'
   exit
 end
@@ -32,6 +33,7 @@ class Setup
         instance.leave
       end
     rescue TTY::Reader::InputInterrupt
+      puts ''
       puts 'You press ctrl-c'
       exit
     end
@@ -76,9 +78,12 @@ class Setup
 
   def select_prompt
     puts printer.black.on_bright_magenta('     To run tests you need to provide an auth token.       ')
-    puts printer.black.on_bright_magenta(' It needs to be set as the environment variable GIST_TOKEN ') #TODO
-    puts printer.black.on_bright_magenta('     You can use `export GIST_TOKEN=<40 char token>`       ') #TODO
+    puts printer.black.on_bright_magenta('       It needs to be set in the token.yaml file           ')
+    puts printer.black.on_bright_magenta('             You can can do it yourself                    ')
+    puts printer.black.on_bright_magenta('                         See:                              ')
+    puts printer.black.on_bright_magenta(' https://github.com/octokit/octokit.rb#oauth-access-tokens ')
     puts printer.black.on_bright_magenta('               Or I can do it for you                      ')
+
     question = printer.cyan('What would you like to do?')
     prompt.select(question, options.values)
   end
@@ -87,12 +92,16 @@ class Setup
     {
       prompt_token: 'I have a token, set it for me',
       prompt_generate: 'Generate my token and set it for me',
-      leave: 'I will do it myself'
+      exit: 'I will do it myself' 
     }
   end
 
   def prompt_token
-    set_gist_token(prompt.ask('40 char Token for https://github.com:'))
+    loop do
+      set_gist_token(prompt.ask('40 char Token for https://github.com:'))
+      break if test_token
+      puts 'The token you provided is not valid. Please try again'
+    end
   end
 
   def prompt_generate
