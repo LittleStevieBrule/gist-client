@@ -1,9 +1,10 @@
 require_relative 'gist_wrapper/config_object'
 require_relative 'gist_wrapper/user'
+require_relative 'gist_wrapper/sawyer_extended/resource'
+
 require 'pry'
 require 'octokit'
 require 'psych'
-require_relative 'gist_wrapper/sawyer_extended/resource'
 
 # main entry point
 module GistWrapper

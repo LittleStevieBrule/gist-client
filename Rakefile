@@ -14,5 +14,10 @@ task :setup do
   Setup.run
 end
 
+task :both do
+  Rake::Task[:setup].invoke
+  Rake::Task[:tests].invoke
+end
+
 
 task :default => [:setup,:spec]

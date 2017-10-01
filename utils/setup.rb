@@ -20,7 +20,6 @@ class Setup
   ENV_NAME = 'GIST_TOKEN'.freeze
 
   def self.run
-
     begin
       sleep 1
       instance = Setup.new
