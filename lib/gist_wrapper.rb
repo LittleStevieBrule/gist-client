@@ -27,6 +27,16 @@ module GistWrapper
     Octokit.public_gists
   end
 
+  def self.test_token
+    begin
+      new_user = user.authenticate
+      sleep 1
+      new_user.authenticated?
+    rescue Octokit::Unauthorized
+      false
+    end
+  end
+
   # custom config
   class ProjectConfig < Config
     # this could be ignorant but as of now NilTokenError is what we want

@@ -7,22 +7,32 @@ require 'timeout'
 require 'logger'
 require 'YAML'
 
-require_relative '../lib/gist_wrapper/stants'
+require_relative '../lib/gist_wrapper/constants'
+require_relative '../lib/gist_wrapper'
+
+trap('INT') do
+  puts 'You pressed ctrl-c'
+  exit
+end
 
 class Setup
 
   ENV_NAME = 'GIST_TOKEN'.freeze
 
   def self.run
-    system 'gem uninstall octokit'
-    sleep 1
-    instance = Setup.new
-    instance.title
-    instance.install
-    options = instance.options
-    prompt = options.keys[options.values.index(instance.select_prompt)]
-    instance.send(prompt) unless ENV['GIST_TOKEN']
-    instance.leave
+    begin
+      sleep 1
+      instance = Setup.new
+      instance.title
+      instance.install
+      options = instance.options
+      prompt = options.keys[options.values.index(instance.select_prompt)]
+      instance.send prompt unless
+      instance.leave
+    rescue TTY::Reader::InputInterrupt
+      puts 'You press ctrl-c'
+      exit
+    end
   end
 
   def title
@@ -42,6 +52,7 @@ class Setup
   end
 
   def install
+
     unless begin
       logger = Logger.new('setup.log')
       TTY::Command.new(output: logger).run 'bundle check'
@@ -83,9 +94,17 @@ class Setup
   end
 
   def prompt_generate
-    username = prompt.ask('Username for https://github.com: ' )
-    password = prompt.mask("Password for #{username}: " )
-    token = generate_token(username,password).token
+    wait_gem('octokit')
+    loop do
+      if login
+        puts 'login successful'
+        break
+      else
+        puts 'Invalid username or password'
+        puts 'Please try again'
+      end
+    end
+    token = generate_token.token
     puts "#{printer.black.on_bright_blue('Your token:')}#{printer.black.on_bright_green.bold(token)}"
     set_gist_token(token)
   end
@@ -96,16 +115,33 @@ class Setup
     exit
   end
 
-  # returns Github oauth token see https://github.com/octokit/octokit.rb#oauth-access-tokens
-  def generate_token(username, password)
-    puts printer.bright_blue('bleep bloop')
-    wait_gem('octokit')
-    spinner = TTY::Spinner.new('[:spinner] Generating token...', format: :dots, clear: true)
-    spinner.start
-    client = Octokit::Client.new(
+  def login
+    begin
+      username = prompt.ask('Username for https://github.com: ' )
+      password = prompt.mask("Password for #{username}: " )
+      spinner = TTY::Spinner.new('[:spinner] Signing in...', format: :dots, clear: true)
+      spinner.start
+      sleep 1
+      client(username, password).user.login
+      spinner.stop
+      true
+    rescue Octokit::Unauthorized
+      spinner.stop
+      false
+    end
+  end
+
+  def client(username = '', password = '')
+    @client ||= Octokit::Client.new(
       login: username,
       password: password
     )
+  end
+
+  # returns Github oauth token see https://github.com/octokit/octokit.rb#oauth-access-tokens
+  def generate_token
+    spinner = TTY::Spinner.new('[:spinner] Generating token...', format: :dots, clear: true)
+    spinner.start
     token = client.create_authorization(
       scopes: ['gist'], note: "Gist Token made at #{Time.now}"
     )
@@ -114,8 +150,6 @@ class Setup
   end
 
   def set_gist_token(token)
-    # logger = Logger.new('setup.log')
-    # TTY::Command.new(output: logger).run "export #{ENV_NAME}=#{token}"
     File.open(GistWrapper::YAML_PATH, 'w') {|f| f.write({'token': token}.to_yaml) }
   end
 
@@ -127,6 +161,13 @@ class Setup
     @prompt ||= TTY::Prompt.new
   end
 
+  def test_token
+    spinner = TTY::Spinner.new("[:spinner] Checking if token #{gem}...", format: :dots, clear: true)
+    spinner.start
+    GistWrapper.test_token
+    spinner.stop
+  end
+
   def wait_gem(gem)
     TTY::Spinner.new("[:spinner] Loading #{gem}...", format: :dots, clear: true).run do
       sleep 3
@@ -134,7 +175,6 @@ class Setup
         begin
           send(:require, gem.to_s)
         rescue
-          puts 'fail'
           sleep 5
         end
       end
@@ -142,5 +182,3 @@ class Setup
   end
 
 end
-
-Setup.run

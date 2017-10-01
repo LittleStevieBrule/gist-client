@@ -51,4 +51,7 @@ rspec
 ```
 
 ### TODO:
-
+TODO:
+     1. ctrl c
+     2. detecting if there is a  valid token set
+     3. checking credentials and re-prompting if they are wrong

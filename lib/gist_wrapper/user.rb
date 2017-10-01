@@ -126,8 +126,6 @@ module GistWrapper
       end
     end
 
-    private
-
     # Octokit client
     def client
       @client ||= Octokit::Client.new access_token: @options.token
