@@ -26,12 +26,12 @@ class Setup
       instance = Setup.new
       instance.title
       instance.install
-      unless instance.test_token
+      unless GistWrapper.test_token
         options = instance.options
         prompt = options.keys[options.values.index(instance.select_prompt)]
         instance.send prompt
-        instance.leave
       end
+      instance.leave
     rescue TTY::Reader::InputInterrupt
       puts ''
       puts 'You press ctrl-c'
@@ -79,7 +79,7 @@ class Setup
   def select_prompt
     puts printer.black.on_bright_magenta('     To run tests you need to provide an auth token.       ')
     puts printer.black.on_bright_magenta('       It needs to be set in the token.yaml file           ')
-    puts printer.black.on_bright_magenta('             You can can do it yourself                    ')
+    puts printer.black.on_bright_magenta('             You can do this yourself                    ')
     puts printer.black.on_bright_magenta('                         See:                              ')
     puts printer.black.on_bright_magenta(' https://github.com/octokit/octokit.rb#oauth-access-tokens ')
     puts printer.black.on_bright_magenta('               Or I can do it for you                      ')
@@ -97,11 +97,12 @@ class Setup
   end
 
   def prompt_token
-    loop do
-      set_gist_token(prompt.ask('40 char Token for https://github.com:'))
-      break if test_token
+    token = loop do
+      t = prompt.ask('40 char Token for https://github.com:')
+      break t if test_token t
       puts 'The token you provided is not valid. Please try again'
     end
+    set_gist_token(token)
   end
 
   def prompt_generate
@@ -161,6 +162,7 @@ class Setup
 
   def set_gist_token(token)
     File.open(GistWrapper::YAML_PATH, 'w') {|f| f.write({'token': token}.to_yaml) }
+    puts 'Your token written to token.yaml'
   end
 
   def printer
@@ -171,10 +173,17 @@ class Setup
     @prompt ||= TTY::Prompt.new
   end
 
-  def test_token
+  def test_token(token)
+    #TODO: spinner are not working
     spinner = TTY::Spinner.new("[:spinner] Checking token...", format: :dots, clear: true)
     spinner.start
-    ret = GistWrapper.test_token
+    ret = begin
+      client = Octokit::Client.new access_token: token
+      client.login
+      true
+    rescue Octokit::Unauthorized
+      false
+    end
     spinner.stop
     ret
   end

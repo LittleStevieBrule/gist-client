@@ -34,7 +34,7 @@ module GistWrapper
       new_user.authenticate
       sleep 1
       new_user.authenticated?
-    rescue
+    rescue Octokit::Unauthorized
       false
     end
   end
