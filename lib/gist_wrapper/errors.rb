@@ -20,9 +20,7 @@ module GistWrapper
 
   # Nil token
   class NilTokenError < StandardError
-    def initialize(msg = 'Token was nil. Store you oauth token as the enviroment
-      variable $GISTTOKEN see http://linuxcommand.org/lc3_man_pages/exporth.html
-       or man export')
+    def initialize(msg = 'Token was nil. Please set your token in the token.yaml file')
       super
     end
   end

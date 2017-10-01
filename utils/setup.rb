@@ -92,7 +92,7 @@ class Setup
     {
       prompt_token: 'I have a token, set it for me',
       prompt_generate: 'Generate my token and set it for me',
-      exit: 'I will do it myself' 
+      exit: 'I will do it myself'
     }
   end
 
