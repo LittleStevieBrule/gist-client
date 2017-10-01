@@ -114,7 +114,6 @@ class Setup
   def leave
     puts printer.green('setup successful')
     puts printer.green.bold('DONE!')
-    exit
   end
 
   def login
