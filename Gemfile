@@ -9,3 +9,7 @@ gem 'tty-prompt'
 gem 'tty-spinner'
 gem 'pastel'
 gem 'psych'
+gem 'rake'
+
+ruby '2.4.0'
+
