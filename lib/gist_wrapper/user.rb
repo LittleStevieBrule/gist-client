@@ -77,6 +77,11 @@ module GistWrapper
       client.star_gist options[:id]
     end
 
+    def remove_star(options = {})
+      authenticate unless authenticated?
+      client.unstar_gist(options[:id])
+    end
+
     # The users Gists
     #
     # @return [Array<Sawyer::Resource>] the users gists

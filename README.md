@@ -6,12 +6,19 @@ A wrapper for the [Octokit](https://github.com/octokit/octokit.rb) gem. Specific
 
 ### Prerequisites
 
+Ruby 2.4.0 is required
+I recommend using [rvm](https://rvm.io/rvm/install)
+
+
 You need [bundler](http://bundler.io/) if you do not already have it.
 
 First clone this repo:
 
-```ruby
+```
  $ git clone https://github.com/LittleStevieBrule/octokit-gist-wrapper.git
+```
+```
+$ cd octokit-gist-wrapper
 ```
 
 Install the dependencies for this project:
@@ -33,7 +40,7 @@ To run the tests you will need a Github OAuth token. You need to provide the tok
 You can run the setup script. This can generate a token for you and write the token.yaml file. The script will prompted you for what you would like to do.
 
 ```
-$ ./setup.rb
+$ rake setup
 ```
 OR
 
@@ -47,5 +54,5 @@ The token needs to be create with gist permissions
 Once you have a valid token in the token.yaml file. You can run the tests:
 
 ```
-rspec
+$ rake
 ```

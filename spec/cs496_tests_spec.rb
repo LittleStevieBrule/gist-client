@@ -77,7 +77,7 @@ context 'cs496 tests' do
     begin
       gist = @my_user.create_gist(@gist_content)
       before = @my_user.starred_gists.include? gist[:id]
-      puts @my_user.star_gist id: gist[:id]
+      @my_user.star_gist id: gist[:id]
       after = @my_user.starred_gists.include?(gist[:id])
     ensure
       @my_user.delete_gist(id: gist[:id])
@@ -87,7 +87,17 @@ context 'cs496 tests' do
   end
 
   it '8. You can remove a star from a Gist' do
-    raise 'TODO'
+    begin
+      gist = @my_user.create_gist(@gist_content)
+      @my_user.star_gist id: gist[:id]
+      before = @my_user.starred_gists.include? gist[:id]
+      @my_user.remove_star(id: gist[:id])
+      after = @my_user.starred_gists.include?(gist[:id])
+    ensure
+      @my_user.delete_gist(id: gist[:id])
+    end
+    result = { before: before, after: after }
+    expect(result.values).to eq [true, false]
   end
 
   it '9. You can delete a Gist' do

@@ -20,4 +20,4 @@ task :both do
 end
 
 
-task :default => [:setup,:spec]
+task :default => :both
