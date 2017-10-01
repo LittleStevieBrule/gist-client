@@ -9,6 +9,6 @@
 /tmp/
 /.idea/
 *.log
-
+token.yaml
 # rspec failure tracking
 .rspec_status

@@ -25,10 +25,12 @@ class Setup
       instance = Setup.new
       instance.title
       instance.install
-      options = instance.options
-      prompt = options.keys[options.values.index(instance.select_prompt)]
-      instance.send prompt unless
-      instance.leave
+      unless instance.test_token
+        options = instance.options
+        prompt = options.keys[options.values.index(instance.select_prompt)]
+        instance.send prompt
+        instance.leave
+      end
     rescue TTY::Reader::InputInterrupt
       puts 'You press ctrl-c'
       exit
@@ -162,10 +164,11 @@ class Setup
   end
 
   def test_token
-    spinner = TTY::Spinner.new("[:spinner] Checking if token #{gem}...", format: :dots, clear: true)
+    spinner = TTY::Spinner.new("[:spinner] Checking token...", format: :dots, clear: true)
     spinner.start
-    GistWrapper.test_token
+    ret = GistWrapper.test_token
     spinner.stop
+    ret
   end
 
   def wait_gem(gem)
