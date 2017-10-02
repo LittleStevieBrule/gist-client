@@ -1,4 +1,5 @@
 require_relative 'setup'
+require_relative '../lib/gist_wrapper/constants'
 
 require 'rspec/core/rake_task'
 require 'tty-prompt'
@@ -14,6 +15,7 @@ module GistWrapper
     attr_accessor :options
 
     def self.run
+      header
       loop do
         begin
           opts = [
@@ -55,9 +57,27 @@ module GistWrapper
       @instance ||= TTYShell.new
     end
 
+    def self.header
+        puts '-----------------------------------------------------------'
+        octokit = 'Octokit'
+        gist =
+          '
+     ██████╗ ██╗███████╗████████╗
+    ██╔════╝ ██║██╔════╝╚══██╔══╝
+    ██║  ███╗██║███████╗   ██║
+    ██║   ██║██║╚════██║   ██║
+    ╚██████╔╝██║███████║   ██║
+     ╚═════╝ ╚═╝╚══════╝   ╚═╝'
+        wrapper = 'wrapper'
+        puts "#{instance.send(:printer).yellow(octokit)} #{instance.send(:printer).cyan(gist)} #{wrapper}"
+        puts "Version (#{GistWrapper::VERSION})"
+        puts '-----------------------------------------------------------'
+    end
+
     def initialize
       require_relative 'user_extended'
     end
+
 
     def commands
       [:create_gist, :delete_gist, :list_gists, :login, :logout, :back, :help].freeze
