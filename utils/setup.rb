@@ -56,22 +56,14 @@ class Setup
   end
 
   def install
-
-    unless begin
-      logger = Logger.new('setup.log')
-      TTY::Command.new(output: logger).run 'bundle check'
-    rescue
-      false
-    end
-      Timeout.timeout(60) do
-        TTY::Spinner.new('[:spinner] Installing gems', format: :dots, clear: true).run do
-          logger = Logger.new('setup.log')
-          TTY::Command.new(output: logger).run 'bundle install'
-        end
-        TTY::Spinner.new('[:spinner] Updating gems', format: :dots, clear: true).run do
-          logger = Logger.new('setup.log')
-          TTY::Command.new(output: logger).run 'bundle update'
-        end
+    Timeout.timeout(60) do
+      TTY::Spinner.new('[:spinner] Installing gems', format: :dots, clear: true).run do
+        logger = Logger.new('setup.log')
+        TTY::Command.new(output: logger).run 'bundle install'
+      end
+      TTY::Spinner.new('[:spinner] Updating gems', format: :dots, clear: true).run do
+        logger = Logger.new('setup.log')
+        TTY::Command.new(output: logger).run 'bundle update'
       end
     end
   end
@@ -131,7 +123,7 @@ class Setup
       username = prompt.ask('Username for https://github.com: ' )
       password = prompt.mask("Password for #{username}: " )
       spinner = TTY::Spinner.new('[:spinner] Signing in...', format: :dots, clear: true)
-      spinner.start
+      spinner.auto_spin
       sleep 1
       client(username, password).user.login
       @username = username
@@ -154,7 +146,7 @@ class Setup
   # returns Github oauth token see https://github.com/octokit/octokit.rb#oauth-access-tokens
   def generate_token
     spinner = TTY::Spinner.new('[:spinner] Generating token...', format: :dots, clear: true)
-    spinner.start
+    spinner.auto_spin
     token = client(@username, @password).create_authorization(
       scopes: ['gist'], note: "Gist Token made at #{Time.now}"
     )
@@ -178,7 +170,7 @@ class Setup
   def test_token(token)
     #TODO: spinner are not working
     spinner = TTY::Spinner.new("[:spinner] Checking token...", format: :dots, clear: true)
-    spinner.start
+    spinner.auto_spin
     ret = begin
       client = Octokit::Client.new access_token: token
       client.login
