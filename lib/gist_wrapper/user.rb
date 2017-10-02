@@ -1,5 +1,6 @@
 require_relative 'errors'
 require_relative 'config_object'
+require_relative '../../lib/gist_wrapper/sawyer_extended/resource'
 
 module GistWrapper
 

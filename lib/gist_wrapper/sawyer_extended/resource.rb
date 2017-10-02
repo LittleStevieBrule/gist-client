@@ -11,5 +11,9 @@ module Sawyer
       contents.length == 1 ? contents[0] : files.to_h.keys.zip(contents).to_h
     end
 
+    def gist_filename(index=0)
+      files.to_h.keys[index].to_s
+    end
+
   end
 end
