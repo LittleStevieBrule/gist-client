@@ -29,23 +29,22 @@ $ bundle install
 
 ### Providing an OAuth token
 
-To run the tests you will need a Github OAuth token. You need to provide the token in the token.yaml file like this:
+To run the tests you will need a personal access token from Github. You need to put this in the token.yaml file like this:
 
 ```yaml
 ---
-:token: <40 char auth token>
+:token: ThisIsNotARealToken
 
 ```
 
-You can run the setup script. This can generate a token for you and write the token.yaml file. The script will prompted you for what you would like to do.
+If you run the setup script it will generate a token for you and write this token to the token.yaml file. The script will prompt you for your Github username and password.
 
 ```
 $ rake setup
 ```
-OR
 
-Do it yourself.
-You can learn more about how to generate a token here [here](https://github.com/octokit/octokit.rb#oauth-access-tokens)
+##### I want to generate it myself:
+You can generate a token [here](https://github.com/settings/tokens)
 The token needs to be create with gist permissions
 
 
@@ -54,5 +53,5 @@ The token needs to be create with gist permissions
 Once you have a valid token in the token.yaml file. You can run the tests:
 
 ```
-$ rake
+$ rake tests
 ```
