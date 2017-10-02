@@ -28,9 +28,10 @@ module GistWrapper
             when choice == opts[1]
               options = {login: 'littlesteviestestaccount', password: ENV['GITPASSWORD']}
               instance._login(options[:login], options[:password])
+              puts 'Enter `help` for list of commands'
               loop do
                 instance.login unless instance.logged_in?
-                cmd = instance.send(:prompt).ask('type a command: ')
+                cmd = instance.send(:prompt).ask('>>> ')
                 begin
                   puts 'next '
                   next
@@ -59,7 +60,7 @@ module GistWrapper
     end
 
     def commands
-      [:create_gist, :delete_gist, :list_gists, :run_cs496_tests, :login, :logout, :back, :help].freeze
+      [:create_gist, :delete_gist, :list_gists, :login, :logout, :back, :help].freeze
     end
 
     def back
