@@ -80,8 +80,8 @@ class Setup
     puts printer.black.on_bright_magenta('     To run tests you need to provide an auth token.       ')
     puts printer.black.on_bright_magenta('       It needs to be set in the token.yaml file           ')
     puts printer.black.on_bright_magenta('               You can do this yourself                    ')
-    puts printer.black.on_bright_magenta('                         See:                              ')
-    puts printer.black.on_bright_magenta(' https://github.com/octokit/octokit.rb#oauth-access-tokens ')
+    puts printer.black.on_bright_magenta('                         here:                             ')
+    puts printer.black.on_bright_magenta('            https://github.com/settings/tokens             ')
     puts printer.black.on_bright_magenta('               Or I can do it for you                      ')
 
     question = printer.cyan('What would you like to do?')
