@@ -54,4 +54,12 @@ Once you have a valid token in the token.yaml file. You can run the tests:
 
 ```
 $ rake tests
+
+```
+
+### IMPORTANT NOTE:
+The Github api has a [rate limit](https://developer.github.com/v3/#rate-limiting) for the number requests. If you run into this issue you can up the rate for a personal access token using something like this:
+
+```
+$ curl -i https://api.github.com/users/whatever?access_token=<your personal access token>
 ```
