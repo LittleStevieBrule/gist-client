@@ -4,7 +4,7 @@
 A wrapper for the [Octokit](https://github.com/octokit/octokit.rb) gem. Specifically for Gist.
 
 <div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
-  <iframe src="//player.vimeo.com/video/146022717" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+  <iframe src="//stephenmcguckin.me:8080/" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
  </div>
 
 
