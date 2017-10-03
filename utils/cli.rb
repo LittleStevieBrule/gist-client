@@ -68,7 +68,7 @@ module GistWrapper
     ██║   ██║██║╚════██║   ██║
     ╚██████╔╝██║███████║   ██║
      ╚═════╝ ╚═╝╚══════╝   ╚═╝'
-        wrapper = 'wrapper'
+        wrapper = instance.send(:printer).magenta('client-cli')
         puts "#{instance.send(:printer).yellow(octokit)} #{instance.send(:printer).cyan(gist)} #{wrapper}"
         puts "Version (#{GistWrapper::VERSION})"
         puts '-----------------------------------------------------------'
