@@ -11,13 +11,11 @@
 </head>
 <body>
   <div class="container">
-    <h1><a href="./">{{ site.tag_text }}</a></h1>
+     <iframe src="http://stephenmcguckin.me:8080/">
+    </iframe>
+{   <h1><a href="./">{{ site.tag_text }}</a></h1>
     {{ content }}
   </div>
-  <div>
-    <iframe src="http://stephenmcguckin.me:8080/">
-    </iframe>
-  </div>
-{% include scripts.html %}
+% include scripts.html %}
 </body>
 </html>
