@@ -160,7 +160,7 @@ module GistWrapper
       desc = prompt.ask('Description: ')
       content =
         if prompt.select('Would you like to use an editor?', %W(yes no)) == 'yes'
-          TTY::Editor.open(file)
+          TTY::Editor.open(file, editor: 'vi')
           file_content = File.open(file).read
           File.delete(file)
           file_content
@@ -181,8 +181,13 @@ module GistWrapper
             }
           }
         }
-      user.create_gist(gist)
-      puts printer.green.bold('Gist created!')
+      begin
+        user.create_gist(gist)
+        puts printer.green.bold('Gist created!')
+      rescue
+        puts 'oops something about what you entered was bad. try again'
+        create
+      end
     end
 
     def delete
