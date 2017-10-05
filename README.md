@@ -63,3 +63,12 @@ The Github api has a [rate limit](https://developer.github.com/v3/#rate-limiting
 ```
 $ curl -i https://api.github.com/users/whatever?access_token=<your personal access token>
 ```
+
+### TODO
+
+* auto complete commands
+* Github link to the project
+* CLI needs to have a better information about the project at the intro
+* choose to list view a list of your gists and choose which one you want to view in detail
+* edit!
+* user should be able to ctrl-c from home screen

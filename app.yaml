@@ -1,6 +1,0 @@
-
-# [START app_yaml]
-runtime: ruby
-env: flex
-entrypoint: bundle exec ./gotty -w rake
-# [END app_yaml]

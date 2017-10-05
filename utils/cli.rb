@@ -7,6 +7,7 @@ require 'tty-spinner'
 require 'pastel'
 require 'pry'
 require 'tty-command'
+require 'tty-editor'
 
 
 module GistWrapper
@@ -34,11 +35,13 @@ module GistWrapper
               loop do
                 instance.login unless instance.logged_in?
                 cmd = instance.send(:prompt).ask('>>> ')
-                begin
-                  puts 'next '
-                  next
-                end if cmd.nil?
-                instance.send(cmd) if instance.commands.include?(cmd.to_sym)
+                next if cmd.nil?
+                if instance.commands.include?(cmd.to_sym)
+                  instance.send(cmd)
+                else
+                  puts "#{instance.printer.red('Command not found: ')} #{cmd}"
+                  instance.help
+                end
               end
             when choice == opts[2]
               exit
@@ -58,20 +61,22 @@ module GistWrapper
     end
 
     def self.header
-        puts '-----------------------------------------------------------'
-        octokit = 'Octokit'
-        gist =
-          '
-     ██████╗ ██╗███████╗████████╗
-    ██╔════╝ ██║██╔════╝╚══██╔══╝
-    ██║  ███╗██║███████╗   ██║
-    ██║   ██║██║╚════██║   ██║
-    ╚██████╔╝██║███████║   ██║
-     ╚═════╝ ╚═╝╚══════╝   ╚═╝'
-        wrapper = 'wrapper'
-        puts "#{instance.send(:printer).yellow(octokit)} #{instance.send(:printer).cyan(gist)} #{wrapper}"
-        puts "Version (#{GistWrapper::VERSION})"
-        puts '-----------------------------------------------------------'
+      line = '████████████████████████████████████████████████████████████'
+      puts instance.printer.magenta(line)
+      gist =
+        '
+   ██████╗ ██╗███████╗████████╗
+  ██╔════╝ ██║██╔════╝╚══██╔══╝
+  ██║  ███╗██║███████╗   ██║
+  ██║   ██║██║╚════██║   ██║
+  ╚██████╔╝██║███████║   ██║
+   ╚═════╝ ╚═╝╚══════╝   ╚═╝'
+      octokit = instance.send(:printer).yellow('Octokit')
+      gist = instance.send(:printer).cyan(gist)
+      wrapper = instance.send(:printer).magenta('client-cli')
+      puts "#{octokit} #{gist} #{wrapper}"
+      puts "Version (#{GistWrapper::VERSION})"
+      puts instance.printer.magenta(line)
     end
 
     def initialize
@@ -80,16 +85,29 @@ module GistWrapper
 
 
     def commands
-      [:create_gist, :delete_gist, :list_gists, :login, :logout, :back, :help].freeze
+      [:create, :delete, :list, :back, :exit, :help].freeze
     end
 
     def back
       GistWrapper::TTYShell.run
     end
 
+    alias_method :exit, :back
+
     def help
-      cmds = commands.map(&:to_s).to_s
-      puts "available commands #{cmds}"
+      cmds =
+      {
+       create: 'Creates a gist',
+       delete: 'Deletes a gist',
+       list: 'Lists your gists',
+       back: 'Go back',
+       exit: 'See `back`',
+       help: 'This message'
+      }
+      puts printer.bold('Valid commands:')
+      cmds.each do |k,v|
+        puts "#{printer.magenta.bold(k)} - #{printer.yellow(v)}"
+      end
     end
 
     def logout
@@ -137,10 +155,16 @@ module GistWrapper
       end
     end
 
-    def create_gist
+    def create
       file = prompt.ask('Name of file: ')
       desc = prompt.ask('Description: ')
-      content = prompt.ask('Contents: ' )
+      content =
+        if prompt.select('Would you like to use an editor?', %W(yes no)) == 'yes'
+          TTY::Editor.open(file)
+          File.open(file).read
+        else
+          prompt.ask('Content: ')
+        end
       gist =
         {
           description: desc,
@@ -152,22 +176,27 @@ module GistWrapper
           }
         }
       user.create_gist(gist)
+      puts printer.green.bold('Gist created!')
     end
 
-    def delete_gist
+    def delete
       # gist_names = user.gists.map { |gist| gist.filename }
       # gist_ids = users.gists.map { |gist| gist.id }
       # gists = gist_ids.zip(gist_names).to_h
       if gists?
         gists = all_gists_names
         d = prompt.select('Which Gist would you like to delete', gists.keys)
-        user.delete_gist(id: gists[d])
+        confirm = prompt.select('Are you sure? ', %w(yes no))
+        if confirm == 'yes'
+          user.delete_gist(id: gists[d])
+          puts printer.red.bold("#{d.split(' - ')[0]} has been deleted!")
+        end
       else
         puts printer.red('No gists to delete!')
       end
     end
 
-    def list_gists
+    def list
       if gists?
         puts printer.cyan.bold("Gist list:")
         puts printer.blue sep
@@ -202,18 +231,12 @@ module GistWrapper
       user.gist?
     end
 
-    private
-
-    def prompt
-      @prompt ||= TTY::Prompt.new
-    end
-
     def printer
       @printer ||= Pastel.new
     end
 
-    def sep
-      '-----------------------------------------------'
+    def prompt
+      @prompt ||= TTY::Prompt.new
     end
 
   end
