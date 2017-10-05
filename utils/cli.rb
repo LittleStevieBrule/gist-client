@@ -161,10 +161,16 @@ module GistWrapper
       content =
         if prompt.select('Would you like to use an editor?', %W(yes no)) == 'yes'
           TTY::Editor.open(file)
-          File.open(file).read
+          file_content = File.open(file).read
+          File.delete(file)
+          file_content
         else
           prompt.ask('Content: ')
         end
+      # this should change
+      if desc == '' || desc.nil?
+        desc = 'No description'
+      end
       gist =
         {
           description: desc,
