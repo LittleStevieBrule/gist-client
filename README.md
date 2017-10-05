@@ -66,11 +66,9 @@ $ curl -i https://api.github.com/users/whatever?access_token=<your personal acce
 
 ### TODO
 
-* improve help message
-* make it clear which user is logged in
 * auto complete commands
 * Github link to the project
-* Improve how the user inputs content
 * CLI needs to have a better information about the project at the intro
 * choose to list view a list of your gists and choose which one you want to view in detail
 * edit!
+* user should be able to ctrl-c from home screen
