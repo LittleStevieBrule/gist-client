@@ -79,16 +79,28 @@ module GistWrapper
 
 
     def commands
-      [:create_gist, :delete_gist, :list_gists, :login, :logout, :back, :help].freeze
+      [:create, :delete, :list, :back, :exit, :help].freeze
     end
 
     def back
       GistWrapper::TTYShell.run
     end
 
+    alias_method :exit, :back
+
     def help
-      cmds = commands.map(&:to_s).to_s
-      puts "available commands #{cmds}"
+      cmds =
+      {
+       create: 'Creates a gist',
+       delete: 'Deletes a gist',
+       list: 'Lists your gists',
+       back: 'Go back',
+       exit: 'See `back`',
+       help: 'This message'
+      }
+      cmds.each do |k,v|
+        puts "#{printer.magenta.bold(k)} - #{printer.yellow(v)}"
+      end
     end
 
     def logout
