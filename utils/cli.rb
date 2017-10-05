@@ -57,20 +57,22 @@ module GistWrapper
     end
 
     def self.header
-        puts '-----------------------------------------------------------'
-        octokit = 'Octokit'
-        gist =
-          '
-     ██████╗ ██╗███████╗████████╗
-    ██╔════╝ ██║██╔════╝╚══██╔══╝
-    ██║  ███╗██║███████╗   ██║
-    ██║   ██║██║╚════██║   ██║
-    ╚██████╔╝██║███████║   ██║
-     ╚═════╝ ╚═╝╚══════╝   ╚═╝'
-        wrapper = instance.send(:printer).magenta('client-cli')
-        puts "#{instance.send(:printer).yellow(octokit)} #{instance.send(:printer).cyan(gist)} #{wrapper}"
-        puts "Version (#{GistWrapper::VERSION})"
-        puts '-----------------------------------------------------------'
+      line = '████████████████████████████████████████████████████████████'
+      puts printer.magenta(line)
+      gist =
+        '
+   ██████╗ ██╗███████╗████████╗
+  ██╔════╝ ██║██╔════╝╚══██╔══╝
+  ██║  ███╗██║███████╗   ██║
+  ██║   ██║██║╚════██║   ██║
+  ╚██████╔╝██║███████║   ██║
+   ╚═════╝ ╚═╝╚══════╝   ╚═╝'
+      octokit = instance.send(:printer).yellow('Octokit')
+      gist = instance.send(:printer).cyan(gist)
+      wrapper = instance.send(:printer).magenta('client-cli')
+      puts "#{octokit} #{gist} #{wrapper}"
+      puts "Version (#{GistWrapper::VERSION})"
+      puts printer.magenta(line)
     end
 
     def initialize
