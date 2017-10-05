@@ -35,10 +35,13 @@ module GistWrapper
               loop do
                 instance.login unless instance.logged_in?
                 cmd = instance.send(:prompt).ask('>>> ')
-                begin
-                  next
-                end if cmd.nil?
-                instance.send(cmd) if instance.commands.include?(cmd.to_sym)
+                next if cmd.nil?
+                if instance.commands.include?(cmd.to_sym)
+                  instance.send(cmd)
+                else
+                  puts "#{instance.printer.red('Command not found: ')} #{cmd}"
+                  instance.help
+                end
               end
             when choice == opts[2]
               exit
@@ -101,6 +104,7 @@ module GistWrapper
        exit: 'See `back`',
        help: 'This message'
       }
+      puts printer.bold('Valid commands:')
       cmds.each do |k,v|
         puts "#{printer.magenta.bold(k)} - #{printer.yellow(v)}"
       end
