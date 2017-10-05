@@ -7,6 +7,7 @@ require 'tty-spinner'
 require 'pastel'
 require 'pry'
 require 'tty-command'
+require 'tty-editor'
 
 
 module GistWrapper
@@ -58,7 +59,7 @@ module GistWrapper
 
     def self.header
       line = '████████████████████████████████████████████████████████████'
-      puts printer.magenta(line)
+      puts instance.printer.magenta(line)
       gist =
         '
    ██████╗ ██╗███████╗████████╗
@@ -72,7 +73,7 @@ module GistWrapper
       wrapper = instance.send(:printer).magenta('client-cli')
       puts "#{octokit} #{gist} #{wrapper}"
       puts "Version (#{GistWrapper::VERSION})"
-      puts printer.magenta(line)
+      puts instance.printer.magenta(line)
     end
 
     def initialize
@@ -150,10 +151,16 @@ module GistWrapper
       end
     end
 
-    def create_gist
+    def create
       file = prompt.ask('Name of file: ')
       desc = prompt.ask('Description: ')
-      content = prompt.ask('Contents: ' )
+      content =
+        if prompt.select('Would you like to use an editor?', %W(yes no)) == 'yes'
+          TTY::Editor.open(file)
+          File.open(file).read
+        else
+          prompt.ask('Content: ')
+        end
       gist =
         {
           description: desc,
@@ -165,9 +172,10 @@ module GistWrapper
           }
         }
       user.create_gist(gist)
+      puts printer.green.bold('Gist created!')
     end
 
-    def delete_gist
+    def delete
       # gist_names = user.gists.map { |gist| gist.filename }
       # gist_ids = users.gists.map { |gist| gist.id }
       # gists = gist_ids.zip(gist_names).to_h
@@ -184,7 +192,7 @@ module GistWrapper
       end
     end
 
-    def list_gists
+    def list
       if gists?
         puts printer.cyan.bold("Gist list:")
         puts printer.blue sep
@@ -219,18 +227,12 @@ module GistWrapper
       user.gist?
     end
 
-    private
-
-    def prompt
-      @prompt ||= TTY::Prompt.new
-    end
-
     def printer
       @printer ||= Pastel.new
     end
 
-    def sep
-      '-----------------------------------------------'
+    def prompt
+      @prompt ||= TTY::Prompt.new
     end
 
   end
