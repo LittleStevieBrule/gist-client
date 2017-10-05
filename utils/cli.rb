@@ -186,10 +186,10 @@ module GistWrapper
       if gists?
         gists = all_gists_names
         d = prompt.select('Which Gist would you like to delete', gists.keys)
-        confirm = prompt.select('Are you sure? ', %w(yes no))
+        confirm = prompt.select(printer.red('Are you sure?'), %w(yes no))
         if confirm == 'yes'
           user.delete_gist(id: gists[d])
-          puts printer.red.bold("#{d.split(' - ')[0]} has been deleted!")
+          puts printer.green.bold("#{d.split(' - ')[0]} has been deleted!")
         end
       else
         puts printer.red('No gists to delete!')
@@ -237,6 +237,10 @@ module GistWrapper
 
     def prompt
       @prompt ||= TTY::Prompt.new
+    end
+
+    def sep
+      '-----------------------------------------------'
     end
 
   end
