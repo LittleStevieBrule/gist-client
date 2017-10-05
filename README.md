@@ -73,4 +73,3 @@ $ curl -i https://api.github.com/users/whatever?access_token=<your personal acce
 * Github link to the project
 * Improve how the user inputs content
 * CLI needs to have a better information about the project at the intro
-* prompt for delete

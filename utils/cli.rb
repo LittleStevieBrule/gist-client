@@ -35,7 +35,6 @@ module GistWrapper
                 instance.login unless instance.logged_in?
                 cmd = instance.send(:prompt).ask('>>> ')
                 begin
-                  puts 'next '
                   next
                 end if cmd.nil?
                 instance.send(cmd) if instance.commands.include?(cmd.to_sym)
@@ -161,7 +160,11 @@ module GistWrapper
       if gists?
         gists = all_gists_names
         d = prompt.select('Which Gist would you like to delete', gists.keys)
-        user.delete_gist(id: gists[d])
+        confirm = prompt.select('Are you sure? ', %w(yes no))
+        if confirm == 'yes'
+          user.delete_gist(id: gists[d])
+          puts printer.red.bold("#{d.split(' - ')[0]} has been deleted!")
+        end
       else
         puts printer.red('No gists to delete!')
       end
