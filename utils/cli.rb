@@ -28,7 +28,7 @@ module GistWrapper
             when choice == opts[0]
               TTY::Command.new.run!('rspec')
             when choice == opts[1]
-              options = {login: 'littlesteviestestaccount', password: ENV['GITPASSWORD']}
+              options = {login: 'littlesteviestestaccount', password: 'Password8!@#'}
               instance._login(options[:login], options[:password])
               puts 'Enter `help` for list of commands'
               loop do
