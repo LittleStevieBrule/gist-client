@@ -1,5 +1,5 @@
 
-# Gist-Wrapper
+# Gist-Client
 
 A wrapper for the [Octokit](https://github.com/octokit/octokit.rb) gem. Specifically for Gist.
 
